@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electronegativity Monopoly — Game Flow Poster</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --gold: #ffcc00;
+    --dark: #060608;
+    --panel: #0f0f14;
+    --border: #2a2a38;
+    --success: #2ed573;
+    --error: #ff4757;
+    --warning: #ffa502;
+    --muted: #888;
+    --text: #e8e8f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ===== POSTER WRAPPER ===== */
+  .poster {
+    width: 1200px;
+    margin: 0 auto;
+    padding: 48px 48px 64px;
+    position: relative;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 2px;
+    background: var(--gold);
+  }
+  .header-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: #fff;
+  }
+  .header h1 span { color: var(--gold); }
+  .header h2 {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+  }
+  .header-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .header-meta span { display: flex; align-items: center; gap: 6px; }
+  .header-meta b { color: var(--gold); }
+
+  /* ===== LEGEND ===== */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    padding: 16px 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ===== FLOW CHART MAIN ===== */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  /* ===== SHARED NODE STYLES ===== */
+  .node {
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    text-align: center;
+    position: relative;
+    line-height: 1.4;
+  }
+  .node-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 3px;
+    letter-spacing: 0.02em;
+  }
+  .node-sub {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    opacity: 0.75;
+    line-height: 1.5;
+  }
+
+  /* Node themes */
+  .node-start {
+    background: #1a1500;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 24px rgba(255,204,0,0.15);
+  }
+  .node-phase {
+    background: #0d1620;
+    border: 1.5px solid #1e90ff;
+    color: #74b9f8;
+  }
+  .node-action {
+    background: #0e130e;
+    border: 1.5px solid #2ed573;
+    color: #a8efcc;
+  }
+  .node-decision {
+    background: #1a1200;
+    border: 1.5px solid var(--warning);
+    color: #ffd080;
+    clip-path: polygon(16px 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 16px 100%, 0% 50%);
+    padding: 14px 36px;
+  }
+  .node-outcome-good {
+    background: #0a1a10;
+    border: 1.5px solid #2ed573;
+    color: #7fe8b0;
+  }
+  .node-outcome-bad {
+    background: #1a0a08;
+    border: 1.5px solid var(--error);
+    color: #ff8a94;
+  }
+  .node-outcome-neutral {
+    background: #141418;
+    border: 1.5px solid #aaa;
+    color: #ccc;
+  }
+  .node-mystery {
+    background: #120a1a;
+    border: 1.5px solid #9c88ff;
+    color: #c4aeff;
+    border-style: dashed;
+  }
+  .node-win {
+    background: #1a1400;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .node-end {
+    background: #180a0a;
+    border: 2px solid var(--error);
+    color: var(--error);
+  }
+
+  /* ===== FLOW CONNECTORS ===== */
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+  .arrow-line {
+    width: 2px;
+    background: var(--border);
+    height: 28px;
+  }
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 10px solid var(--border);
+  }
+  .arrow-label {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    white-space: nowrap;
+    background: var(--dark);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+  .arrow-gold .arrow-line { background: var(--gold); opacity: 0.5; }
+  .arrow-gold .arrow-head { border-top-color: var(--gold); opacity: 0.5; }
+  .arrow-green .arrow-line { background: #2ed573; opacity: 0.5; }
+  .arrow-green .arrow-head { border-top-color: #2ed573; opacity: 0.5; }
+  .arrow-red .arrow-line { background: var(--error); opacity: 0.5; }
+  .arrow-red .arrow-head { border-top-color: var(--error); opacity: 0.5; }
+  .arrow-purple .arrow-line { background: #9c88ff; opacity: 0.5; }
+  .arrow-purple .arrow-head { border-top-color: #9c88ff; opacity: 0.5; }
+
+  /* ===== ROW LAYOUTS ===== */
+  .row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+  }
+  .row-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-header {
+    width: 100%;
+    text-align: center;
+    margin: 28px 0 16px;
+    position: relative;
+  }
+  .section-header::before,
+  .section-header::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    height: 1px;
+    background: var(--border);
+    width: 30%;
+  }
+  .section-header::before { left: 0; }
+  .section-header::after { right: 0; }
+  .section-header span {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--dark);
+    padding: 0 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== BRANCH CONTAINERS ===== */
+  .branch-container {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    gap: 0;
+  }
+
+  /* ===== HORIZONTAL CONNECTOR ===== */
+  .h-line {
+    height: 2px;
+    background: var(--border);
+    flex: 1;
+    align-self: center;
+    margin-top: -1px;
+  }
+  .h-line-gold { background: var(--gold); opacity: 0.4; }
+  .h-line-green { background: #2ed573; opacity: 0.4; }
+  .h-line-red { background: var(--error); opacity: 0.4; }
+  .h-line-purple { background: #9c88ff; opacity: 0.4; }
+  .h-line-warn { background: var(--warning); opacity: 0.4; }
+
+  /* ===== WIDE NODES ===== */
+  .node-wide { min-width: 200px; max-width: 240px; }
+  .node-sm { min-width: 160px; max-width: 200px; }
+  .node-xs { min-width: 130px; max-width: 160px; }
+
+  /* ===== MYSTERY OUTCOMES GRID ===== */
+  .mystery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+  }
+  .mystery-card {
+    background: #120a1a;
+    border: 1.5px dashed #9c88ff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    text-align: left;
+  }
+  .mystery-card .mc-title {
+    font-weight: 700;
+    font-size: 12px;
+    color: #c4aeff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .mystery-card .mc-body {
+    color: #9080cc;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .mc-tag {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+  .mc-tag-good { background: #0a1a10; color: #2ed573; border: 1px solid #2ed573; }
+  .mc-tag-bad  { background: #1a0808; color: #ff4757; border: 1px solid #ff4757; }
+  .mc-tag-wild { background: #1a0f00; color: #ffa502; border: 1px solid #ffa502; }
+
+  /* ===== QUIZ OUTCOMES GRID ===== */
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* ===== BOARD ELEMENTS SIDEBAR ===== */
+  .board-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+  }
+  .board-table th {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .board-table td {
+    padding: 5px 10px;
+    color: var(--muted);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .board-table td:first-child { color: var(--text); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #555;
+  }
+
+  /* ===== SCORE FORMULA ===== */
+  .formula-box {
+    background: #0f0f14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    margin: 0;
+  }
+  .formula-box .formula-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ===== 2-COL LAYOUT ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+
+  /* ===== PANEL BOXES ===== */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .panel-title {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ===== LEVEL BADGES ===== */
+  .lvl { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-family: 'Space Mono', monospace; }
+  .lvl-1 { background: #555; color: #ddd; }
+  .lvl-2 { background: #0a2e18; color: #2ed573; border: 1px solid #2ed573; }
+  .lvl-3 { background: #0a1228; color: #1e90ff; border: 1px solid #1e90ff; }
+  .lvl-4 { background: #1a0f28; color: #9c88ff; border: 1px solid #9c88ff; }
+  .lvl-5 { background: #1a0808; color: #ff4757; border: 1px solid #ff4757; }
+
+  /* ===== FINE FORMULA ===== */
+  .fine-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--muted);
+  }
+  .fine-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <div class="header-eyebrow">complete game guide · all paths · all outcomes</div>
+    <h1>Electronegativity <span>Monopoly</span></h1>
+    <h2>Lab Edition — Game Flow Poster &nbsp;·&nbsp; Created for Dr. Loney's Classroom</h2>
+    <div class="header-meta">
+      <span>Players: <b>2–6 Scientists</b></span>
+      <span>Turn Timer: <b>45 seconds</b></span>
+      <span>Starting Gold: <b>1,500 Au</b></span>
+      <span>Board Tiles: <b>64 positions</b></span>
+      <span>Currency: <b>ΔEN + Au</b></span>
+    </div>
+  </div>
+
+  <!-- ===== LEGEND ===== -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1a1500;border:1.5px solid var(--gold);"></div> Start / Win</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0d1620;border:1.5px solid #1e90ff;"></div> Game Phase</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0e130e;border:1.5px solid #2ed573;"></div> Action / Choice</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a1200;border:1.5px solid var(--warning);border-radius:0;clip-path:polygon(8px 0%,calc(100% - 8px) 0%,100% 50%,calc(100% - 8px) 100%,8px 100%,0% 50%);"></div> Decision</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0a1a10;border:1.5px solid #2ed573;"></div> Good Outcome</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a0a08;border:1.5px solid var(--error);"></div> Bad Outcome</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#120a1a;border:1.5px dashed #9c88ff;"></div> Mystery Event</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#141418;border:1.5px solid #aaa;"></div> Neutral / Skip</div>
+  </div>
+
+  <!-- ===== MAIN FLOW ===== -->
+  <div class="flowchart">
+
+    <!-- STEP 1: GAME START -->
+    <div class="node node-start" style="width:340px;">
+      <div class="node-title">⚗️ GAME START</div>
+      <div class="node-sub">Each scientist receives 1,500 Au · All tokens on GO</div>
+    </div>
+
+    <div class="arrow arrow-gold">
+      <div class="arrow-line"></div>
+      <div class="arrow-head"></div>
+    </div>
+
+    <!-- STEP 2: SETUP CHOICES -->
+    <div class="three-col" style="width:100%;">
+      <div class="panel">
+        <div class="panel-title">Win Condition</div>
+        <div class="fine-row"><span style="color:#fff;">Max Composite Score</span></div>
+        <div class="fine-row" style="font-size:10px;color:#666;">Quick 6.0 · Average 10.0 · Long 15.0</div>
+        <div class="fine-row"><span style="color:#fff;">Time Limit</span></div>
+        <div class="fine-row" style="font-size:10px;color:#666;">Game ends when timer runs out</div>
+        <div class="fine-row"><span style="color:#fff;">Round Limit</span></div>
+        <div class="fine-row" style="font-size:10px;color:#666;">Ends after N full rounds</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Game Realism</div>
+        <div class="fine-row"><span style="color:#2ed573;">Realistic Mode</span></div>
+        <div class="fine-row" style="font-size:10px;color:#666;">No metal-metal bonds allowed</div>
+        <div class="fine-row"><span style="color:#9c88ff;">Experimental Mode</span></div>
+        <div class="fine-row" style="font-size:10px;color:#666;">Metallic compounds permitted</div>
+      </div>
+      <div class="formula-box" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="formula-label">Composite Score Formula</div>
+        <div style="font-size:16px;line-height:1.8;">Composite =<br>ΔEN Points + (Au × 0.0025)</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;">1,000 Au = 2.5 ΔEN</div>
+      </div>
+    </div>
+
+    <div class="arrow arrow-gold">
+      <div class="arrow-line"></div>
+      <div class="arrow-head"></div>
+    </div>
+
+    <!-- STEP 3: TURN START -->
+    <div class="node node-phase" style="width:340px;">
+      <div class="node-title">🎲 TURN BEGINS</div>
+      <div class="node-sub">45-second clock starts · Auto-roll if idle</div>
+    </div>
+
+    <div class="arrow arrow-green">
+      <div class="arrow-line"></div>
+      <div class="arrow-head"></div>
+    </div>
+
+    <!-- SKIP TURN CHECK -->
+    <div class="node node-decision" style="width:400px;">
+      <div class="node-title">Is turn skipped?</div>
+    </div>
+
+    <!-- SKIP BRANCH -->
+    <div class="two-col" style="width:700px;">
+      <div class="col">
+        <div style="display:flex;align-items:center;gap:0;width:100%;justify-content:flex-end;">
+          <div class="arrow arrow-red" style="margin-right:0;">
+            <div class="arrow-line"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;width:100%;padding-right:0;">
+          <div style="color:var(--error);font-size:10px;font-family:'Space Mono',monospace;text-align:right;margin-right:8px;margin-top:-12px;">YES (bankrupt / quiz fail)</div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;width:100%;">
+          <div class="node node-outcome-bad node-sm" style="text-align:center;">
+            <div class="node-title">Turn Skipped</div>
+            <div class="node-sub">Skip flag cleared · No roll · No lab · Next player</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div style="display:flex;align-items:center;gap:0;width:100%;justify-content:flex-start;">
+          <div class="arrow arrow-green" style="margin-left:0;">
+            <div class="arrow-line"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-start;width:100%;padding-left:0;">
+          <div style="color:#2ed573;font-size:10px;font-family:'Space Mono',monospace;margin-left:8px;margin-top:-12px;">NO</div>
+        </div>
+        <div style="display:flex;justify-content:flex-start;width:100%;">
+          <div class="node node-action node-sm" style="text-align:center;">
+            <div class="node-title">Choose Action</div>
+            <div class="node-sub">Roll dice · Enter Lab (if 2+ elements)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header"><span>TILE OUTCOMES</span></div>
+
+    <!-- THE 3 TILE DECISIONS in parallel with dice roll -->
+    <div class="node node-phase" style="width:360px;">
+      <div class="node-title">🎲 Dice Roll (1–6)</div>
+      <div class="node-sub">Token moves that many tiles around the board</div>
+    </div>
+
+    <!-- PASS GO -->
+    <div style="display:flex;width:100%;align-items:flex-start;justify-content:center;gap:24px;margin-top:16px;">
+      <!-- PASS GO event -->
+      <div class="col" style="flex:1;max-width:180px;">
+        <div style="font-size:10px;font-family:'Space Mono',monospace;color:var(--gold);text-align:center;margin-bottom:6px;">IF PASSES GO</div>
+        <div class="node node-outcome-good" style="width:100%;text-align:center;">
+          <div class="node-title">+200 Au</div>
+          <div class="node-sub">Research Grant awarded automatically</div>
+        </div>
+      </div>
+      <!-- main tile decision -->
+      <div class="col" style="flex:2;align-items:center;">
+        <div class="arrow arrow-green" style="margin-bottom:4px;">
+          <div class="arrow-line"></div>
+          <div class="arrow-head"></div>
+        </div>
+        <div class="node node-decision" style="width:340px;">
+          <div class="node-title">What tile does player land on?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-WAY BRANCH: GO / Element / Mystery / Blank -->
+    <div class="row" style="width:100%;margin-top:12px;align-items:flex-start;gap:8px;">
+
+      <!-- GO -->
+      <div class="col" style="flex:1;align-items:center;">
+        <div style="color:var(--gold);font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">GO tile</div>
+        <div class="node node-start node-xs" style="text-align:center;">
+          <div class="node-title">GO!</div>
+          <div class="node-sub">Already handled — +200 Au<br>Turn continues</div>
+        </div>
+        <div class="arrow arrow-gold"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+        <div class="node node-outcome-neutral node-xs" style="text-align:center;">
+          <div class="node-title">End Turn</div>
+          <div class="node-sub">Next player's turn</div>
+        </div>
+      </div>
+
+      <!-- UNOWNED ELEMENT -->
+      <div class="col" style="flex:2;align-items:center;">
+        <div style="color:#2ed573;font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">Unowned Element</div>
+        <div class="node node-decision" style="width:240px;">
+          <div class="node-title">Can afford? Buy?</div>
+        </div>
+        <div class="two-col" style="width:100%;margin-top:8px;gap:8px;">
+          <div class="col" style="align-items:center;">
+            <div style="color:#2ed573;font-size:9px;font-family:'Space Mono',monospace;margin-bottom:4px;">YES — PURCHASE</div>
+            <div class="node node-outcome-good" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">Element Claimed!</div>
+              <div class="node-sub">Pay cost in Au<br>Tile turns player color<br>Level = 1 (Grey)</div>
+            </div>
+            <div class="arrow arrow-green"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+            <div class="node node-decision" style="width:100%;font-size:11px;">
+              <div class="node-title">Last element?</div>
+            </div>
+            <div class="two-col" style="width:100%;margin-top:6px;gap:6px;">
+              <div class="col" style="align-items:center;">
+                <div style="color:var(--gold);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">YES</div>
+                <div class="node node-win" style="width:100%;text-align:center;font-size:11px;">
+                  <div class="node-title">🏆 GAME ENDS</div>
+                  <div class="node-sub">All elements claimed</div>
+                </div>
+              </div>
+              <div class="col" style="align-items:center;">
+                <div style="color:#2ed573;font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">NO</div>
+                <div class="node node-outcome-neutral" style="width:100%;text-align:center;font-size:11px;">
+                  <div class="node-title">End Turn</div>
+                  <div class="node-sub">Next player</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--error);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:4px;">NO / DECLINE</div>
+            <div class="node node-outcome-bad" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">No Purchase</div>
+              <div class="node-sub">If can't afford:<br>"Insufficient Au!"<br>Turn ends</div>
+            </div>
+            <div class="arrow arrow-red"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+            <div class="node node-outcome-neutral" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">End Turn</div>
+              <div class="node-sub">Next player</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OWNED BY ANOTHER -->
+      <div class="col" style="flex:2;align-items:center;">
+        <div style="color:var(--error);font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">Owned by Another</div>
+        <div class="node node-outcome-bad" style="width:220px;text-align:center;">
+          <div class="node-title">⚡ Reaction Tax!</div>
+          <div class="node-sub">Fine = ⌊EN × 50⌋ × Level</div>
+        </div>
+        <div class="arrow arrow-red"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+        <div class="node node-decision" style="width:240px;">
+          <div class="node-title">Enough Au to pay?</div>
+        </div>
+        <div class="two-col" style="width:100%;margin-top:8px;gap:8px;">
+          <div class="col" style="align-items:center;">
+            <div style="color:#2ed573;font-size:9px;font-family:'Space Mono',monospace;margin-bottom:4px;">YES — PAYS FULL</div>
+            <div class="node node-outcome-neutral" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">Au Transferred</div>
+              <div class="node-sub">Owner receives fine<br>Turn ends</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--error);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:4px;">NO — BANKRUPT</div>
+            <div class="node node-outcome-bad" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">💸 Bankruptcy!</div>
+              <div class="node-sub">Pay what you have<br>Get 150 Au grant<br>Next turn SKIPPED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYER'S OWN ELEMENT -->
+      <div class="col" style="flex:2;align-items:center;">
+        <div style="color:#74b9f8;font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">Own Element</div>
+        <div class="node node-phase" style="width:200px;text-align:center;">
+          <div class="node-title">Upgrade Lab!</div>
+          <div class="node-sub">Upgrade cost: 100 + (Lv−1)×50 Au</div>
+        </div>
+        <div class="arrow arrow-purple"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+        <div class="node node-decision" style="width:220px;font-size:11px;">
+          <div class="node-title">Upgrade, Sell, or Skip?</div>
+        </div>
+        <div class="three-col" style="width:100%;margin-top:8px;gap:6px;">
+          <div class="col" style="align-items:center;">
+            <div style="color:#9c88ff;font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">UPGRADE</div>
+            <div class="node node-mystery" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">Level Up!</div>
+              <div class="node-sub">Fine increases<br>Pay upgrade cost</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--gold);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">SELL</div>
+            <div class="node node-outcome-good" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">Sell Element</div>
+              <div class="node-sub">Get 75% of total<br>invested back</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:#aaa;font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">SKIP</div>
+            <div class="node node-outcome-neutral" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">End Turn</div>
+              <div class="node-sub">No action taken</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MYSTERY -->
+      <div class="col" style="flex:2;align-items:center;">
+        <div style="color:#9c88ff;font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">MYSTERY Tile</div>
+        <div class="node node-mystery" style="width:200px;text-align:center;">
+          <div class="node-title">? ? ? MYSTERY</div>
+          <div class="node-sub">Random event fires — 1 of 8 possible</div>
+        </div>
+        <div class="arrow arrow-purple"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+        <div style="font-size:10px;font-family:'Space Mono',monospace;color:#9c88ff;margin-bottom:8px;text-align:center;">RANDOM EVENT (uniform chance)</div>
+        <!-- Mini mystery grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;">
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-wild">WILD</span> Quantum Entanglement</div>
+            <div class="mc-body">Swap all Au & ΔEN with a random opponent</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-bad">BAD</span> Lab Contamination</div>
+            <div class="mc-body">Pay 50 Au to ALL other scientists</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-good">GOOD</span> Breakthrough!</div>
+            <div class="mc-body">Novel isotope found · +300 Au</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-good">GOOD</span> Nobel Prize</div>
+            <div class="mc-body">Publication accepted · +2.0 ΔEN</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-good">GOOD</span> Tax Return</div>
+            <div class="mc-body">Budget approved · +50 Au</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-bad">BAD</span> Radioactive Decay</div>
+            <div class="mc-body">Samples degraded · −100 Au</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-wild">WILD</span> Lab Expansion</div>
+            <div class="mc-body">3 new elements added to board (or +150 Au if full)</div>
+          </div>
+          <div class="mystery-card" style="font-size:10px;">
+            <div class="mc-title"><span class="mc-tag mc-tag-wild">QUIZ</span> Pop Quiz!</div>
+            <div class="mc-body">Solo or Head-to-Head chemistry question</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end 5-way tile row -->
+
+    <!-- ===== SECTION: THE LAB ===== -->
+    <div class="section-header"><span>THE LABORATORY — BOND FORMATION</span></div>
+
+    <div class="node node-phase" style="width:360px;">
+      <div class="node-title">🔬 Enter the Lab</div>
+      <div class="node-sub">Available only if player owns 2+ elements · Ends your turn on use</div>
+    </div>
+
+    <div class="arrow arrow-green"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node node-action" style="width:400px;">
+      <div class="node-title">Select 2 elements from your inventory</div>
+      <div class="node-sub">Calculate ΔEN = |EN₁ − EN₂| · Classify the bond type</div>
+    </div>
+
+    <div class="arrow arrow-green"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <!-- Bond classification table -->
+    <div class="panel" style="width:700px;">
+      <div class="panel-title">Bond Classification & ΔEN Scoring</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div style="background:#0a0e14;border:1px solid #1e90ff;border-radius:6px;padding:12px;text-align:center;">
+          <div style="color:#74b9f8;font-weight:700;font-size:13px;margin-bottom:4px;">Non-Polar Covalent</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">ΔEN = 0.0 – 0.4</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#2ed573;margin-top:4px;">Earn ΔEN points</div>
+        </div>
+        <div style="background:#120e08;border:1px solid var(--warning);border-radius:6px;padding:12px;text-align:center;">
+          <div style="color:#ffd080;font-weight:700;font-size:13px;margin-bottom:4px;">Polar Covalent</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">ΔEN = 0.4 – 1.7</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#2ed573;margin-top:4px;">Earn ΔEN points</div>
+        </div>
+        <div style="background:#0a1209;border:1px solid #2ed573;border-radius:6px;padding:12px;text-align:center;">
+          <div style="color:#a8efcc;font-weight:700;font-size:13px;margin-bottom:4px;">Ionic</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">ΔEN ≥ 1.7</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#2ed573;margin-top:4px;">Earn ΔEN points</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#0e0e14;border-radius:6px;font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);text-align:center;">
+        In <span style="color:#2ed573;">Realistic Mode</span>: Metal + Metal bond is BLOCKED &nbsp;|&nbsp; In <span style="color:#9c88ff;">Experimental Mode</span>: All bonds permitted
+      </div>
+    </div>
+
+    <div class="arrow arrow-green"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node node-decision" style="width:340px;">
+      <div class="node-title">Is the answer correct?</div>
+    </div>
+
+    <div class="two-col" style="width:600px;margin-top:12px;">
+      <div class="col" style="align-items:center;">
+        <div style="color:#2ed573;font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">✓ CORRECT</div>
+        <div class="node node-outcome-good" style="width:100%;text-align:center;">
+          <div class="node-title">Bond Successful!</div>
+          <div class="node-sub">ΔEN points added to score<br>Bond recorded · Turn ends</div>
+        </div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div style="color:var(--error);font-size:10px;font-family:'Space Mono',monospace;margin-bottom:6px;">✗ INCORRECT</div>
+        <div class="node node-outcome-bad" style="width:100%;text-align:center;">
+          <div class="node-title">Bond Failed!</div>
+          <div class="node-sub">No ΔEN earned<br>NEXT TURN SKIPPED</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: QUIZ EVENTS ===== -->
+    <div class="section-header"><span>POP QUIZ EVENTS (triggered from MYSTERY)</span></div>
+
+    <div class="two-col" style="width:100%;">
+      <!-- SOLO QUIZ -->
+      <div class="panel">
+        <div class="panel-title">Solo Quiz</div>
+        <div class="node node-phase" style="width:100%;text-align:center;margin-bottom:10px;">
+          <div class="node-title">Electronegativity Question</div>
+          <div class="node-sub">Current player answers alone</div>
+        </div>
+        <div class="two-col" style="gap:8px;">
+          <div class="col" style="align-items:center;">
+            <div style="color:#2ed573;font-size:10px;font-family:'Space Mono',monospace;margin-bottom:4px;">CORRECT</div>
+            <div class="node node-outcome-good" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">+500 Au +1.0 ΔEN</div>
+              <div class="node-sub">Choose a player to give +200 Au grant</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--error);font-size:10px;font-family:'Space Mono',monospace;margin-bottom:4px;">INCORRECT</div>
+            <div class="node node-outcome-bad" style="width:100%;text-align:center;font-size:11px;">
+              <div class="node-title">−100 Au · Skip Next</div>
+              <div class="node-sub">Next turn automatically skipped</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- H2H QUIZ -->
+      <div class="panel">
+        <div class="panel-title">Head-to-Head Quiz</div>
+        <div class="node node-phase" style="width:100%;text-align:center;margin-bottom:10px;">
+          <div class="node-title">Both players answer separately</div>
+          <div class="node-sub">Current player + random opponent · Different questions</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="col" style="align-items:center;">
+            <div style="color:#2ed573;font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">BOTH CORRECT</div>
+            <div class="node node-outcome-good" style="width:100%;text-align:center;font-size:10px;">
+              <div class="node-title">TIE</div>
+              <div class="node-sub">Both: +200 Au +1.0 ΔEN</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--warning);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">YOU WIN</div>
+            <div class="node node-outcome-good" style="width:100%;text-align:center;font-size:10px;">
+              <div class="node-title">You correct only</div>
+              <div class="node-sub">+400 Au +2.0 ΔEN</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--error);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">YOU LOSE</div>
+            <div class="node node-outcome-bad" style="width:100%;text-align:center;font-size:10px;">
+              <div class="node-title">Opponent correct</div>
+              <div class="node-sub">They get +400 Au +2.0 ΔEN</div>
+            </div>
+          </div>
+          <div class="col" style="align-items:center;">
+            <div style="color:var(--error);font-size:9px;font-family:'Space Mono',monospace;margin-bottom:3px;">BOTH WRONG</div>
+            <div class="node node-outcome-neutral" style="width:100%;text-align:center;font-size:10px;">
+              <div class="node-title">Mutual Failure</div>
+              <div class="node-sub">No rewards for anyone</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: ELEMENT LEVELS ===== -->
+    <div class="section-header"><span>ELEMENT UPGRADE TRACK</span></div>
+
+    <div class="panel" style="width:100%;">
+      <div class="panel-title">Level Progression — Fine = ⌊EN × 50⌋ × Level</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        <div style="text-align:center;padding:10px;background:#0e0e12;border-radius:6px;border:1px solid #333;">
+          <span class="lvl lvl-1">Lv. 1</span>
+          <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:6px;">Upgrade: 100 Au</div>
+          <div style="font-size:10px;color:#555;margin-top:3px;">Base fine × 1</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#0e0e12;border-radius:6px;border:1px solid #2ed573;">
+          <span class="lvl lvl-2">Lv. 2</span>
+          <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:6px;">Upgrade: 150 Au</div>
+          <div style="font-size:10px;color:#555;margin-top:3px;">Base fine × 2</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#0e0e12;border-radius:6px;border:1px solid #1e90ff;">
+          <span class="lvl lvl-3">Lv. 3</span>
+          <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:6px;">Upgrade: 200 Au</div>
+          <div style="font-size:10px;color:#555;margin-top:3px;">Base fine × 3</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#0e0e12;border-radius:6px;border:1px solid #9c88ff;">
+          <span class="lvl lvl-4">Lv. 4</span>
+          <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:6px;">Upgrade: 250 Au</div>
+          <div style="font-size:10px;color:#555;margin-top:3px;">Base fine × 4</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#0e0e12;border-radius:6px;border:1px solid #ff4757;">
+          <span class="lvl lvl-5">Lv. 5</span>
+          <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:6px;">Upgrade: 300 Au</div>
+          <div style="font-size:10px;color:#555;margin-top:3px;">Base fine × 5</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;text-align:center;font-size:10px;font-family:'Space Mono',monospace;color:#555;">
+        Sell value = 75% of (base cost + all upgrade costs invested) &nbsp;·&nbsp; Higher levels = higher fines for opponents landing on your element
+      </div>
+    </div>
+
+    <!-- ===== SECTION: WIN CONDITIONS ===== -->
+    <div class="section-header"><span>GAME END CONDITIONS</span></div>
+
+    <div class="three-col" style="width:100%;">
+      <div class="col" style="align-items:center;">
+        <div class="node node-win" style="width:100%;text-align:center;">
+          <div class="node-title">🏆 Max Composite Score</div>
+          <div class="node-sub">A player's ΔEN + (Au × 0.0025) reaches the goal<br>Warning fires at goal − 2 · Game ends instantly</div>
+        </div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="node node-win" style="width:100%;text-align:center;">
+          <div class="node-title">🏆 All Elements Claimed</div>
+          <div class="node-sub">Every element tile on the board has an owner<br>Leaderboard shows final composite scores</div>
+        </div>
+      </div>
+      <div class="col" style="align-items:center;">
+        <div class="node node-win" style="width:100%;text-align:center;">
+          <div class="node-title">🏆 Time / Round Limit</div>
+          <div class="node-sub">Game timer expires OR max rounds reached<br>Highest composite score at that moment wins</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow arrow-gold" style="margin-top:12px;">
+      <div class="arrow-line" style="height:20px;"></div>
+      <div class="arrow-head"></div>
+    </div>
+
+    <div class="node node-start" style="width:400px;text-align:center;">
+      <div class="node-title">🥇 FINAL LEADERBOARD — GAME OVER</div>
+      <div class="node-sub">Ranked by composite score · Ties shown · Winner crowned</div>
+    </div>
+
+  </div><!-- end flowchart -->
+
+  <!-- ===== BOARD ELEMENTS REFERENCE ===== -->
+  <div class="section-header" style="margin-top:40px;"><span>KEY BOARD ELEMENTS REFERENCE</span></div>
+
+  <div class="two-col" style="width:100%;">
+    <div class="panel">
+      <div class="panel-title">Outer Ring Elements (Always on Board)</div>
+      <table class="board-table">
+        <tr><th>Tile</th><th>Symbol</th><th>EN</th><th>Cost</th><th>Base Fine</th></tr>
+        <tr><td>GO</td><td>—</td><td>—</td><td>—</td><td>+200 Au on pass</td></tr>
+        <tr><td>Francium</td><td>Fr</td><td>0.70</td><td>60 Au</td><td>35 Au</td></tr>
+        <tr><td>Caesium</td><td>Cs</td><td>0.79</td><td>60 Au</td><td>39 Au</td></tr>
+        <tr><td>MYSTERY</td><td>???</td><td>—</td><td>—</td><td>Random event</td></tr>
+        <tr><td>Potassium</td><td>K</td><td>0.82</td><td>100 Au</td><td>41 Au</td></tr>
+        <tr><td>Sodium</td><td>Na</td><td>0.93</td><td>120 Au</td><td>46 Au</td></tr>
+        <tr><td>Fluorine</td><td>F</td><td>3.98</td><td>400 Au</td><td>199 Au</td></tr>
+        <tr><td>Oxygen</td><td>O</td><td>3.44</td><td>380 Au</td><td>172 Au</td></tr>
+        <tr><td>Chlorine</td><td>Cl</td><td>3.16</td><td>360 Au</td><td>158 Au</td></tr>
+        <tr><td>Nitrogen</td><td>N</td><td>3.04</td><td>340 Au</td><td>152 Au</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Expansion Elements (Added via MYSTERY)</div>
+      <table class="board-table">
+        <tr><th>Symbol</th><th>EN</th><th>Cost</th><th>Notes</th></tr>
+        <tr><td>Zn</td><td>1.65</td><td>200 Au</td><td>Transition metal</td></tr>
+        <tr><td>Cu</td><td>1.90</td><td>250 Au</td><td>Transition metal</td></tr>
+        <tr><td>Ag</td><td>1.93</td><td>300 Au</td><td>Transition metal</td></tr>
+        <tr><td>Au</td><td>2.54</td><td>400 Au</td><td>Gold itself!</td></tr>
+        <tr><td>Pt</td><td>2.28</td><td>350 Au</td><td>Transition metal</td></tr>
+        <tr><td>Pu</td><td>1.28</td><td>500 Au</td><td>Most expensive!</td></tr>
+        <tr><td>U</td><td>1.38</td><td>400 Au</td><td>Actinide</td></tr>
+        <tr><td colspan="4" style="color:#555;font-size:10px;padding-top:8px;">36 total expansion elements · added 3 at a time via Mystery</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <span>Electronegativity Monopoly: Lab Edition</span>
+    <span>Lead Creators: Anav, Dorian, Martin &amp; Devan · Educational Project · Not affiliated with Hasbro</span>
+    <span>electronegativity.anavpatel.com</span>
+  </div>
+
+</div><!-- end poster -->
+</body>
+</html>
